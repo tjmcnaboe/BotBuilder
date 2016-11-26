@@ -81,6 +81,16 @@ namespace Microsoft.Bot.Builder.Dialogs
                 await SendAsync(scope, toBot, token);
             }
         }
+        
+                
+        public static async Task SendAsync(IMessageActivity toBot, Func<IDialog<object>> MakeRoot, MicrosoftAppCredentials credentials, CancellationToken token = default(CancellationToken))
+        {
+            using (var scope = MultiTenantDialogModule.BeginLifetimeScope(Container,credentials, toBot))
+            {
+                MultiTenantDialogModule_MakeRoot.Register(scope, MakeRoot);
+                await SendAsync(scope, toBot, token);
+            }
+        }
 
         /// <summary>
         /// Resume a conversation and post the data to the dialog waiting.
